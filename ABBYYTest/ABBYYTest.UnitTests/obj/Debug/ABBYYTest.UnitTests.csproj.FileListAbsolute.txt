@@ -1,0 +1,15 @@
+E:\VS13\Projects\ABBYYTest\ABBYYTest.UnitTests\bin\Debug\ABBYYTest.UnitTests.dll
+E:\VS13\Projects\ABBYYTest\ABBYYTest.UnitTests\bin\Debug\ABBYYTest.UnitTests.pdb
+E:\VS13\Projects\ABBYYTest\ABBYYTest.UnitTests\bin\Debug\ABBYYTest.exe
+E:\VS13\Projects\ABBYYTest\ABBYYTest.UnitTests\bin\Debug\nunit.framework.dll
+E:\VS13\Projects\ABBYYTest\ABBYYTest.UnitTests\bin\Debug\WebDriver.dll
+E:\VS13\Projects\ABBYYTest\ABBYYTest.UnitTests\bin\Debug\WebDriver.Support.dll
+E:\VS13\Projects\ABBYYTest\ABBYYTest.UnitTests\bin\Debug\ABBYYTest.pdb
+E:\VS13\Projects\ABBYYTest\ABBYYTest.UnitTests\bin\Debug\nunit.framework.xml
+E:\VS13\Projects\ABBYYTest\ABBYYTest.UnitTests\bin\Debug\WebDriver.pdb
+E:\VS13\Projects\ABBYYTest\ABBYYTest.UnitTests\bin\Debug\WebDriver.xml
+E:\VS13\Projects\ABBYYTest\ABBYYTest.UnitTests\bin\Debug\WebDriver.Support.pdb
+E:\VS13\Projects\ABBYYTest\ABBYYTest.UnitTests\bin\Debug\WebDriver.Support.xml
+E:\VS13\Projects\ABBYYTest\ABBYYTest.UnitTests\obj\Debug\ABBYYTest.UnitTests.csprojResolveAssemblyReference.cache
+E:\VS13\Projects\ABBYYTest\ABBYYTest.UnitTests\obj\Debug\ABBYYTest.UnitTests.dll
+E:\VS13\Projects\ABBYYTest\ABBYYTest.UnitTests\obj\Debug\ABBYYTest.UnitTests.pdb
