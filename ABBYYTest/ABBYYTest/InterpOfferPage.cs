@@ -13,22 +13,35 @@ namespace ABBYYTest
     public class InterpOfferPage
     {
         // IWebDriver
-        private static IWebDriver driver;
+        static IWebDriver driver;
         // Page url.
-        public static string url = "http://abbyy-ls.ru/interpreting_offer";
+        readonly static string url = "http://abbyy-ls.ru/interpreting_offer";
         // By Locators.
-        By activityTypeLocator = By.ClassName("form-select");
+        readonly By activityTypeLocator = By.ClassName("form-select");
 
         public InterpOfferPage(IWebDriver wdriver)
         {
             driver = wdriver;
         }
 
+        static InterpOfferPage()
+        {
+            Url = url;
+        }
+        /// <summary>
+        /// Url property
+        /// </summary>
+        public static string Url
+        {
+            get;
+            set;
+        }
+
         /// <summary>
         /// Dropbox 'activity type'.
         /// </summary>
         /// <returns>IWebElement</returns>
-        private IWebElement getActivityBoxElement()
+        IWebElement GetActivityBoxElement()
         {
             return driver.FindElement(activityTypeLocator);
         }
@@ -36,9 +49,9 @@ namespace ABBYYTest
         /// Options of 'activity type' dropbox.
         /// </summary>
         /// <returns>Ilist of IWebElements, options of dropbox</returns>
-        private IList<IWebElement> getActivityBoxOptions()
+        IList<IWebElement> GetActivityBoxOptions()
         {
-            return new SelectElement(getActivityBoxElement()).Options;
+            return new SelectElement(GetActivityBoxElement()).Options;
         }
 
         /// <summary>
@@ -46,13 +59,13 @@ namespace ABBYYTest
         /// </summary>
         /// <param name="type">ActivityBoxCheck.IsEmpty = check for emptiness
         /// ActivityBoxCheck.IsEnabled = check if dropbox is enabled</param>
-        public void checkActivityBox(ActivityBoxCheck type)
+        public void CheckActivityBox(ActivityBoxCheck type)
         {
             try
             {
-                IWebElement activityBox = getActivityBoxElement();
+                IWebElement activityBox = GetActivityBoxElement();
                 activityBox.Click();
-                IList<IWebElement> activityOptions = getActivityBoxOptions();
+                IList<IWebElement> activityOptions = GetActivityBoxOptions();
                 if (type == ActivityBoxCheck.IsEmpty)
                     Assert.IsTrue(activityOptions.Count >= 1);
                 else
@@ -60,12 +73,11 @@ namespace ABBYYTest
             }
             catch (AssertionException)
             {
-                BasePage.takeScreenshot(ScreenShotType.InterpOfferPage, 0, driver);
+                BasePage.TakeScreenshot(ScreenShotType.InterpOfferPage, driver);
                 driver.Quit();
-                if (type == ActivityBoxCheck.IsEmpty)
-                    throw new AssertionException("'Activity type' dropbox is empty");
-                else
-                    throw new AssertionException("'Activity type' dropbox is disabled. Not possible to choose activity.");
+                string exDropbox = type == ActivityBoxCheck.IsEmpty ? "empty." : "disabled. Not possible to choose activity.";
+                string exMsg = string.Format("'Activity type' dropbox is {0}", exDropbox);
+                throw new AssertionException(exMsg);
             }
         }
     }

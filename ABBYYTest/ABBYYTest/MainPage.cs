@@ -17,22 +17,35 @@ namespace ABBYYTest
     public class MainPage
     {
         // IWebDriver
-        private IWebDriver driver;
+        IWebDriver driver;
         // Page url.
-        public static string url = "http://abbyy-ls.ru/";
+        readonly static string url = "http://abbyy-ls.ru/";
 
-        By menuLocator = By.ClassName("control-slider");
-        By imagesInfoLocator = By.ClassName("frontslider2-rightcol-img");
+        readonly By menuLocator = By.ClassName("control-slider");
+        readonly By imagesInfoLocator = By.ClassName("frontslider2-rightcol-img");
 
         public MainPage(IWebDriver wdriver)
         {
-            driver = wdriver;        
+            driver = wdriver;
+        }
+
+        static MainPage()
+        {
+            Url = url;
+        }
+        /// <summary>
+        /// Url property
+        /// </summary>
+        public static string Url
+        {
+            get;
+            set;
         }
         /// <summary>
         /// IReadOnlyCollection of buttons to the left of the screen.
         /// </summary>
         /// <returns>IReadOnlyCollection of buttons to the left of the screen</returns>
-        private IReadOnlyCollection<IWebElement> getLeftMenu()
+        IReadOnlyCollection<IWebElement> GetLeftMenu()
         {
             return driver.FindElements(menuLocator);
         }
@@ -40,7 +53,7 @@ namespace ABBYYTest
         /// IReadOnlyCollection of WebElements containing images.
         /// </summary>
         /// <returns>IReadOnlyCollection of WebElements containing images</returns>
-        private IReadOnlyCollection<IWebElement> getImagesInfo()
+        IReadOnlyCollection<IWebElement> GetImagesInfo()
         {
             return driver.FindElements(imagesInfoLocator);
         }
@@ -48,7 +61,7 @@ namespace ABBYYTest
         /// Get the number of elements in the left menu.
         /// </summary>
         /// <returns>The number of elements in the left menu</returns>
-        private int getMenuCount()
+        int GetMenuCount()
         {
             return driver.FindElements(menuLocator).Count;
         }
@@ -56,7 +69,7 @@ namespace ABBYYTest
         /// Get background Y positions for images from CSS.
         /// </summary>
         /// <returns>List of int values of background Y positions for images</returns>
-        private List<int> getBackGroundPosYForImages()
+        List<int> GetBackGroundPosYForImages()
         {
             IReadOnlyCollection<IWebElement> imagesInfo = driver.FindElements(imagesInfoLocator);
             int imgNumber = imagesInfo.Count;
@@ -66,13 +79,16 @@ namespace ABBYYTest
                 for (int i = 0; i < imgNumber; i++)
                 {
                     string backgroundPosY = imagesInfo.ElementAt(i).GetCssValue("background-position-y");
-                    backGroundPosList.Add(Int32.Parse(backgroundPosY.TrimEnd('p', 'x')));
+                    backgroundPosY = backgroundPosY.TrimEnd('p', 'x');
+                    int position = 0;
+                    Int32.TryParse(backgroundPosY, out position);
+                    backGroundPosList.Add(position);
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                Console.WriteLine("Error obtaining background position y of slide image from CSS: {0}", ex.ToString());
-                return null;
+                driver.Quit();
+                throw new Exception("Error obtaining background position y of slide image from CSS.");
             }
             return backGroundPosList;
         }
@@ -81,53 +97,28 @@ namespace ABBYYTest
         /// Check current image if it is displayed and ( if its position differes from the rest ).
         /// </summary>
         /// <param name="driver">IWebDriver</param>
-        public void checkImage()
+        public bool checkImage()
         {
-            int menuCount = getMenuCount();
+            int menuCount = GetMenuCount();
             for (int number = 0; number < menuCount; number++)
             {
-                getLeftMenu().ElementAt(number).Click();
+                GetLeftMenu().ElementAt(number).Click();
                 Thread.Sleep(1000);
-                try
-                {
-                    Assert.IsTrue(getImagesInfo().ElementAt(number).Displayed);
-                }
-                catch (AssertionException)
-                {
-                    BasePage.takeScreenshot(ScreenShotType.MainPage, number, driver);
-                    driver.Quit();
-                    throw new AssertionException("Image number" + (number - 1) + "was not correctly displayed");
-                }
+                if (!GetImagesInfo().ElementAt(number).Displayed)
+                    return false;
             }
+            return true;
         }
 
         /// <summary>
-        /// Check if positions of current image and the rest are different.
+        /// Check if positions of current image and the rest in CSS are different.
         /// </summary>
-        /// <param name="number">Number of current image</param>
-        /// <param name="driver">IWebDriver</param>
-        public void checkImagePosition()
+        public bool checkImagePosition()
         {
-            int menuCount = getMenuCount();
-            for (int number = 0; number < menuCount; number++)
-            {
-                int elementsCount = getBackGroundPosYForImages().Count;
-                int counter = 0;
-                try
-                {
-                    for (counter = 0; counter < elementsCount && counter != number; counter++)
-                    {
-                        List<int> backGrPositions = getBackGroundPosYForImages();
-                        Assert.IsTrue(backGrPositions.ElementAt(number) != backGrPositions.ElementAt(counter));
-                    }
-                }
-                catch (AssertionException)
-                {
-                    BasePage.takeScreenshot(ScreenShotType.MainPage, number, driver);
-                    driver.Quit();
-                    throw new AssertionException("Images positions at" + (number - 1) + " and " + (counter - 1) + " are equal.");
-                }
-            }
+            int menuCount = GetMenuCount();
+            List<int> BackGrPositions = GetBackGroundPosYForImages();
+            bool isUnique = BackGrPositions.Distinct().Count() == menuCount;
+            return isUnique;
         }
     }
 }

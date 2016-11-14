@@ -19,27 +19,27 @@ namespace ABBYYTest.UnitTests
     public class UnitTestIterpOfferPage
     {
         // BaseTest variables for browsers.
-        private static BaseTest<ChromeDriver> baseTestChrome;
-        private static BaseTest<FirefoxDriver> baseTestFirefox;
-        private static BaseTest<InternetExplorerDriver> baseTestInternetExplorer;
+        BaseTest<ChromeDriver> baseTestChrome;
+        BaseTest<FirefoxDriver> baseTestFirefox;
+        BaseTest<InternetExplorerDriver> baseTestInternetExplorer;
         // Web page variables.
-        private static InterpOfferPage pageChrome;
-        private static InterpOfferPage pageFirefox;
-        private static InterpOfferPage pageInternetExplorer;
+        InterpOfferPage pageChrome;
+        InterpOfferPage pageFirefox;
+        InterpOfferPage pageInternetExplorer;
 
         /// <summary>
         /// A one time setup method for tests in this class.
         /// Initialise BaseTest and Web page variables.
         /// </summary>
         [OneTimeSetUp]
-        public void setUpMainPage()
+        public void SetUpMainPage()
         {
-            baseTestChrome = new BaseTest<ChromeDriver>(InterpOfferPage.url);
-            baseTestFirefox = new BaseTest<FirefoxDriver>(InterpOfferPage.url);
-            baseTestInternetExplorer = new BaseTest<InternetExplorerDriver>(InterpOfferPage.url);
-            pageChrome = new InterpOfferPage(baseTestChrome.webDriver);
-            pageFirefox = new InterpOfferPage(baseTestFirefox.webDriver);
-            pageInternetExplorer = new InterpOfferPage(baseTestInternetExplorer.webDriver);
+            baseTestChrome = new BaseTest<ChromeDriver>(InterpOfferPage.Url);
+            baseTestFirefox = new BaseTest<FirefoxDriver>(InterpOfferPage.Url);
+            baseTestInternetExplorer = new BaseTest<InternetExplorerDriver>(InterpOfferPage.Url);
+            pageChrome = new InterpOfferPage(baseTestChrome.WebDriver);
+            pageFirefox = new InterpOfferPage(baseTestFirefox.WebDriver);
+            pageInternetExplorer = new InterpOfferPage(baseTestInternetExplorer.WebDriver);
         }
 
         /// <summary>
@@ -58,22 +58,22 @@ namespace ABBYYTest.UnitTests
         /// Test 'Activity type' dropbox for emptines.
         /// </summary>
         [Test]
-        public static void testActivityBoxEmpty()
+        public void TestActivityBoxEmpty()
         {
-            pageChrome.checkActivityBox(ActivityBoxCheck.IsEmpty);
-            pageFirefox.checkActivityBox(ActivityBoxCheck.IsEmpty);
-            pageInternetExplorer.checkActivityBox(ActivityBoxCheck.IsEmpty);
+            pageChrome.CheckActivityBox(ActivityBoxCheck.IsEmpty);
+            pageFirefox.CheckActivityBox(ActivityBoxCheck.IsEmpty);
+            pageInternetExplorer.CheckActivityBox(ActivityBoxCheck.IsEmpty);
         }
 
         /// <summary>
         /// Test if 'Activity type' dropbox is enabled.
         /// </summary>
         [Test]
-        public static void testActivityBoxEnabled()
+        public void TestActivityBoxEnabled()
         {
-            pageChrome.checkActivityBox(ActivityBoxCheck.IsEnabled);
-            pageFirefox.checkActivityBox(ActivityBoxCheck.IsEmpty);
-            pageInternetExplorer.checkActivityBox(ActivityBoxCheck.IsEmpty);
+            pageChrome.CheckActivityBox(ActivityBoxCheck.IsEnabled);
+            pageFirefox.CheckActivityBox(ActivityBoxCheck.IsEnabled);
+            pageInternetExplorer.CheckActivityBox(ActivityBoxCheck.IsEnabled);
         }
     }
 }

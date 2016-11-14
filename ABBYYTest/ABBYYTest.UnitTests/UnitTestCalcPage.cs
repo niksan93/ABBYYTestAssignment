@@ -20,27 +20,27 @@ namespace ABBYYTest.UnitTests
     public class UnitTestCalcPage
     {
         // BaseTest variables for browsers.
-        private static BaseTest<ChromeDriver> baseTestChrome;
-        private static BaseTest<FirefoxDriver> baseTestFirefox;
-        private static BaseTest<InternetExplorerDriver> baseTestInternetExplorer;
+        BaseTest<ChromeDriver> baseTestChrome;
+        BaseTest<FirefoxDriver> baseTestFirefox;
+        BaseTest<InternetExplorerDriver> baseTestInternetExplorer;
         // Web page variables.
-        private static CalculatorPage pageChrome;
-        private static CalculatorPage pageFirefox;
-        private static CalculatorPage pageInternetExplorer;
+        CalculatorPage pageChrome;
+        CalculatorPage pageFirefox;
+        CalculatorPage pageInternetExplorer;
 
         /// <summary>
         /// A one time setup method for tests in this class.
         /// Initialise BaseTest and Web page variables.
         /// </summary>
         [OneTimeSetUp]
-        public void setUpMainPage()
+        public void SetUpMainPage()
         {
-            baseTestChrome = new BaseTest<ChromeDriver>(CalculatorPage.url);
-            baseTestFirefox = new BaseTest<FirefoxDriver>(CalculatorPage.url);
-            baseTestInternetExplorer = new BaseTest<InternetExplorerDriver>(CalculatorPage.url);
-            pageChrome = new CalculatorPage(baseTestChrome.webDriver);
-            pageFirefox = new CalculatorPage(baseTestFirefox.webDriver);
-            pageInternetExplorer = new CalculatorPage(baseTestInternetExplorer.webDriver);
+            baseTestChrome = new BaseTest<ChromeDriver>(CalculatorPage.Url);
+            baseTestFirefox = new BaseTest<FirefoxDriver>(CalculatorPage.Url);
+            baseTestInternetExplorer = new BaseTest<InternetExplorerDriver>(CalculatorPage.Url);
+            pageChrome = new CalculatorPage(baseTestChrome.WebDriver);
+            pageFirefox = new CalculatorPage(baseTestFirefox.WebDriver);
+            pageInternetExplorer = new CalculatorPage(baseTestInternetExplorer.WebDriver);
         }
 
         /// <summary>
@@ -59,22 +59,22 @@ namespace ABBYYTest.UnitTests
         /// Test 'From language' dropbox for emptiness
         /// </summary>
         [Test]
-        public static void testfromLangDropBox()
+        public void TestfromLangDropBox()
         {
-            pageChrome.checkLangDropboxEmpty(DroboxType.From);
-            pageFirefox.checkLangDropboxEmpty(DroboxType.From);
-            pageInternetExplorer.checkLangDropboxEmpty(DroboxType.From);
+            pageChrome.CheckLangDropboxEmpty(DropboxType.From);
+            pageFirefox.CheckLangDropboxEmpty(DropboxType.From);
+            pageInternetExplorer.CheckLangDropboxEmpty(DropboxType.From);
         }
 
         /// <summary>
         /// Test 'From language' dropbox to have 'Русский' as an option.
         /// </summary>
         [Test]
-        public static void testFromLangOptions()
+        public void TestFromLangOptions()
         {
-            pageChrome.checkLangOptions(DroboxType.From);
-            pageFirefox.checkLangOptions(DroboxType.From);
-            pageInternetExplorer.checkLangOptions(DroboxType.From);
+            pageChrome.CheckLangOptions(DropboxType.From);
+            pageFirefox.CheckLangOptions(DropboxType.From);
+            pageInternetExplorer.CheckLangOptions(DropboxType.From);
         }
 
         /// <summary>
@@ -83,22 +83,22 @@ namespace ABBYYTest.UnitTests
         /// are perfomed, since 'To language' is empty by default and requires 'From language' chosen.
         /// </summary>
         [Test]
-        public static void testToLangDropBox()
+        public void TestToLangDropBox()
         {
-            pageChrome.checkLangOptions(DroboxType.From);
+            pageChrome.CheckLangOptions(DropboxType.From);
             // Wait until previous action is correcty completed in browser.
             Thread.Sleep(500);
-            pageChrome.checkLangDropboxEmpty(DroboxType.To);
+            pageChrome.CheckLangDropboxEmpty(DropboxType.To);
 
-            pageFirefox.checkLangOptions(DroboxType.From);
+            pageFirefox.CheckLangOptions(DropboxType.From);
             // Wait until previous action is correcty completed in browser.
             Thread.Sleep(500);
-            pageFirefox.checkLangDropboxEmpty(DroboxType.To);
+            pageFirefox.CheckLangDropboxEmpty(DropboxType.To);
 
-            pageInternetExplorer.checkLangOptions(DroboxType.From);
+            pageInternetExplorer.CheckLangOptions(DropboxType.From);
             // Wait until previous action is correcty completed in browser.
             Thread.Sleep(500);
-            pageInternetExplorer.checkLangDropboxEmpty(DroboxType.To);
+            pageInternetExplorer.CheckLangDropboxEmpty(DropboxType.To);
         }
 
         /// <summary>
@@ -107,22 +107,22 @@ namespace ABBYYTest.UnitTests
         /// are perfomed, since 'To language' is empty by default and requires 'From language' chosen.
         /// </summary>
         [Test]
-        public static void testToLangOptions()
+        public void TestToLangOptions()
         {
-            pageChrome.checkLangOptions(DroboxType.From);
+            pageChrome.CheckLangOptions(DropboxType.From);
             // Wait until previous action is correcty completed in browser.
             Thread.Sleep(500);
-            pageChrome.checkLangOptions(DroboxType.To);
+            pageChrome.CheckLangOptions(DropboxType.To);
 
-            pageFirefox.checkLangOptions(DroboxType.From);
+            pageFirefox.CheckLangOptions(DropboxType.From);
             // Wait until previous action is correcty completed in browser.
             Thread.Sleep(500);
-            pageFirefox.checkLangOptions(DroboxType.To);
+            pageFirefox.CheckLangOptions(DropboxType.To);
 
-            pageInternetExplorer.checkLangOptions(DroboxType.From);
+            pageInternetExplorer.CheckLangOptions(DropboxType.From);
             // Wait until previous action is correcty completed in browser.
             Thread.Sleep(500);
-            pageInternetExplorer.checkLangOptions(DroboxType.To);
+            pageInternetExplorer.CheckLangOptions(DropboxType.To);
         }
     }
 }

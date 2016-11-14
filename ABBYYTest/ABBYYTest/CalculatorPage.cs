@@ -11,20 +11,33 @@ using NUnit.Framework;
 
 namespace ABBYYTest
 {
-    public enum DroboxType { From, To }
+    public enum DropboxType { From, To }
     public class CalculatorPage
     {
         // IWebDriver
-        private IWebDriver driver;
+        IWebDriver driver;
         // Page url.
-        public static string url = "http://abbyy-ls.ru/doc-calculator";
+        readonly static string url = "http://abbyy-ls.ru/doc-calculator";
         // By Locators.
-        By fromLangLocator = By.Name("from-lang");
-        By toLangLocator = By.Name("to-lang");
+        readonly By fromLangLocator = By.Name("from-lang");
+        readonly By toLangLocator = By.Name("to-lang");
 
         public CalculatorPage(IWebDriver wdriver)
         {
             driver = wdriver;
+        }
+
+        static CalculatorPage()
+        {
+            Url = url;
+        }
+        /// <summary>
+        /// Url property
+        /// </summary>
+        public static string Url
+        {
+            get;
+            set;
         }
 
         /// <summary>
@@ -33,9 +46,9 @@ namespace ABBYYTest
         /// <param name="from">true: from language
         /// false: to language</param>
         /// <returns>IWebElement of dropbox</returns>
-        IWebElement getLangElement(DroboxType type)
+        IWebElement GetLangElement(DropboxType type)
         {
-            if (type == DroboxType.From)
+            if (type == DropboxType.From)
                 return driver.FindElement(fromLangLocator);
             else
                 return driver.FindElement(toLangLocator);
@@ -46,12 +59,9 @@ namespace ABBYYTest
         /// <param name="from">true: from language
         /// false: to language</param>
         /// <returns>Ilist of IWebElements, options of dropbox</returns>
-        IList<IWebElement> getLangOptions(DroboxType type)
+        IList<IWebElement> GetLangOptions(DropboxType type)
         {
-            if (type == DroboxType.From)
-                return new SelectElement(getLangElement(type)).Options;
-            else
-                return new SelectElement(getLangElement(type)).Options;
+            return new SelectElement(GetLangElement(type)).Options;
         }
 
         /// <summary>
@@ -61,22 +71,21 @@ namespace ABBYYTest
         /// <param name="langOptions">Ilist of options of dropbox</param>
         /// <param name="from">true: 'from language'
         /// false: 'to language'</param>
-        public void checkLangDropboxEmpty(DroboxType type)
+        public void CheckLangDropboxEmpty(DropboxType type)
         {
             try
             {
-                IWebElement dropBox = getLangElement(type);
-                IList<IWebElement> langOptions = getLangOptions(type);
+                IWebElement dropBox = GetLangElement(type);
+                IList<IWebElement> langOptions = GetLangOptions(type);
                 Assert.IsTrue(langOptions.Count >= 1);
             }
             catch (AssertionException)
             {
-                BasePage.takeScreenshot(ScreenShotType.CalcPage, 0, driver);
+                BasePage.TakeScreenshot(ScreenShotType.CalcPage, driver);
                 driver.Quit();
-                if (type == DroboxType.From)
-                    throw new AssertionException("'from language' dropbox is empty");
-                else
-                    throw new AssertionException("'to language' dropbox is empty");
+                string exDropbox = type == DropboxType.From ? "From" : "To";
+                string exMsg = string.Format("{0} language' dropbox is empty", exDropbox);
+                throw new AssertionException(exMsg);
             }
         }
 
@@ -87,36 +96,30 @@ namespace ABBYYTest
         /// <param name="langOptions">Ilist of options of dropbox</param>
         /// <param name="from">true: 'from language'
         /// false: 'to language'</param>
-        public void checkLangOptions(DroboxType type)
+        public void CheckLangOptions(DropboxType type)
         {
-            IWebElement dropBox = getLangElement(type);
-            IList<IWebElement> langOptions = getLangOptions(type);
+            IWebElement dropBox = GetLangElement(type);
+            IList<IWebElement> langOptions = GetLangOptions(type);
             int optionsCount = langOptions.Count;
             dropBox.Click();
             for (int dropBoxOption = 0; dropBoxOption < optionsCount; dropBoxOption++)
             {
                 IWebElement option = langOptions[dropBoxOption];
-                if (option.GetAttribute("text").Equals("Русский") && type == DroboxType.From)
+                if (option.GetAttribute("text").Equals("Русский") && type == DropboxType.From ||
+                    option.GetAttribute("text").Equals("Английский") && type == DropboxType.To)
                 {
                     // It is a known issue, that this might occasionally not work with Firefox
                     SelectElement selectEl = new SelectElement(dropBox);
                     selectEl.SelectByIndex(dropBoxOption);
                     return;
                 }
-                else
-                    if (option.GetAttribute("text").Equals("Английский") && type == DroboxType.To)
-                    {
-                        SelectElement selectEl = new SelectElement(dropBox);
-                        selectEl.SelectByIndex(dropBoxOption);
-                        return;
-                    }
             }
-            BasePage.takeScreenshot(ScreenShotType.CalcPage, 0, driver);
+            BasePage.TakeScreenshot(ScreenShotType.CalcPage, driver);
             driver.Quit();
-            if (type == DroboxType.From)
-                throw new AssertionException("'Русский' is not found in the 'from language' dropbox");
-            else
-                throw new AssertionException("'Английский' is not found in the 'to language' dropbox");
+            string exLang = type == DropboxType.From ? "'Русский'" : "'Английский'";
+            string exDropbox = type == DropboxType.From ? "from" : "to";
+            string exMsg = string.Format("{0} is not found in the '{1} language' dropbox", exLang, exDropbox);
+            throw new AssertionException(exMsg);
         }
     }
 }

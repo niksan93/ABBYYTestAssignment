@@ -15,18 +15,37 @@ namespace ABBYYTest.UnitTests
     [TestFixture(typeof(ChromeDriver))]
     [TestFixture(typeof(FirefoxDriver))]
     [TestFixture(typeof(InternetExplorerDriver))]
-    public class BaseTest <TIWebDriver> where TIWebDriver: IWebDriver, new()
+    public class BaseTest<TIWebDriver> where TIWebDriver : IWebDriver, new()
     {
-        public IWebDriver webDriver;
+        protected enum PageInfo { ContactInfo, LangSwitcherExistence, LangSwitcherElements }
+        IWebDriver webDriver;
 
+        public BaseTest()
+        {
+
+        }
         public BaseTest(string url)
         {
-           this.webDriver = new TIWebDriver();
-           this.webDriver.Manage().Window.Maximize();
-           this.webDriver.Navigate().GoToUrl(url);
-            ABBYYTest.BasePage.checkPhoneText(this.webDriver);
-            ABBYYTest.BasePage.checkLangSwitcherExistence(this.webDriver);
-            ABBYYTest.BasePage.checkLangSwitcherElements(this.webDriver);            
+            webDriver = new TIWebDriver();
+            webDriver.Manage().Window.Maximize();
+            webDriver.Navigate().GoToUrl(url);
+            WebDriver = webDriver;
+           // BasePage.CheckPhoneText(webDriver);
+           // BasePage.CheckLangSwitcherExistence(webDriver);
+           // BasePage.CheckLangSwitcherElements(webDriver);
+        }
+
+        public static void init (){
+            IWebDriver
+        }
+
+        /// <summary>
+        /// IWebDriver property
+        /// </summary>
+        public IWebDriver WebDriver
+        {
+            get;
+            set;
         }
 
         /// <summary>
@@ -34,7 +53,76 @@ namespace ABBYYTest.UnitTests
         /// </summary>
         public void Dispose()
         {
-            this.webDriver.Quit();
+            webDriver.Quit();
         }
+
+        protected void BaseTestInfo(Action action, PageInfo info)
+        {
+            try
+            {
+                action();
+            }
+            catch (AssertionException)
+            {
+                if (info == PageInfo.ContactInfo)
+                    BasePage.TakeScreenshot(ScreenShotType.ContactInfo, webDriver);
+                else
+                    BasePage.TakeScreenshot(ScreenShotType.LanguageChange, webDriver);
+                webDriver.Quit();
+                string messageStart = "";
+                if (info == PageInfo.ContactInfo)
+                    messageStart = "Phone number is not correct on page ";
+                if (info == PageInfo.LangSwitcherExistence)
+                    messageStart = "There is no language switcher element on page ";
+                if (info == PageInfo.LangSwitcherElements)
+                    messageStart = "Unexpected languages in language drop box ";
+                string message = string.Concat(messageStart, webDriver.Url);
+                throw new AssertionException(message);
+            }
+        }
+        
+        /*protected void BaseTestContactInfo(Action action)//, IWebDriver driver)
+        {
+            try
+            {
+                action();
+            }
+            catch (AssertionException)
+            {
+                BasePage.TakeScreenshot(ScreenShotType.ContactInfo, webDriver);
+                webDriver.Quit();
+                throw new AssertionException("Phone number is not correct on page" + webDriver.Url);
+            }
+        }
+
+        protected void BaseTestLangSwitcherExistence(Action action)
+        {
+            try
+            {
+                action();
+            }
+            catch (AssertionException)
+            {
+                BasePage.TakeScreenshot(ScreenShotType.LanguageChange, webDriver);
+                webDriver.Quit();
+                throw new AssertionException("There is no language switcher element on page" + webDriver.Url);
+            }
+        }
+
+        protected void BaseTestLangSwitcherElements(Action action)
+        {
+            try
+            {
+                action();
+            }
+            catch (AssertionException)
+            {
+                //driver.FindElement(langSwitcherLocator).Click();
+                BasePage.TakeScreenshot(ScreenShotType.LanguageChange, webDriver);
+                webDriver.Quit();
+                throw new Exception("Unexpected languages in language drop box");
+            }
+        }*/
+
     }
 }
