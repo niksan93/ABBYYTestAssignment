@@ -60,7 +60,7 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
-    <Compile Include="AdditionalFunc.cs" />
+    <Compile Include="BaseTest.cs" />
     <Compile Include="UnitTestCalcPage.cs" />
     <Compile Include="UnitTestIterpOfferPage.cs" />
     <Compile Include="UnitTestMainPage.cs" />

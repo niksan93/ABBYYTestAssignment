@@ -19,167 +19,110 @@ namespace ABBYYTest.UnitTests
     [TestFixture]
     public class UnitTestCalcPage
     {
-        private static CalculatorPage calcPage;
-        private static IWebDriver driver;
+        // BaseTest variables for browsers.
+        private static BaseTest<ChromeDriver> baseTestChrome;
+        private static BaseTest<FirefoxDriver> baseTestFirefox;
+        private static BaseTest<InternetExplorerDriver> baseTestInternetExplorer;
+        // Web page variables.
+        private static CalculatorPage pageChrome;
+        private static CalculatorPage pageFirefox;
+        private static CalculatorPage pageInternetExplorer;
+
         /// <summary>
-        /// Chrome test.
+        /// A one time setup method for tests in this class.
+        /// Initialise BaseTest and Web page variables.
         /// </summary>
-        [Test]
-        public void chromeCalcPageTest()
+        [OneTimeSetUp]
+        public void setUpMainPage()
         {
-            driver = new ChromeDriver();
-            driver.Manage().Window.Maximize();
-            testWrittenTranslation(driver);
-            driver.Quit();
-        }
-        /// <summary>
-        /// Firefox test.
-        /// </summary>
-        [Test]
-        public void firefoxCalcPageTest()
-        {
-            driver = new FirefoxDriver();
-            driver.Manage().Window.Maximize();
-            testWrittenTranslation(driver);
-            driver.Quit();
-        }
-        /// <summary>
-        /// Internet explorer test.
-        /// </summary>
-        [Test]
-        public void ieCalcPageTest()
-        {
-            driver = new InternetExplorerDriver();
-            driver.Manage().Window.Maximize();
-            testWrittenTranslation(driver);
-            driver.Quit();
+            baseTestChrome = new BaseTest<ChromeDriver>(CalculatorPage.url);
+            baseTestFirefox = new BaseTest<FirefoxDriver>(CalculatorPage.url);
+            baseTestInternetExplorer = new BaseTest<InternetExplorerDriver>(CalculatorPage.url);
+            pageChrome = new CalculatorPage(baseTestChrome.webDriver);
+            pageFirefox = new CalculatorPage(baseTestFirefox.webDriver);
+            pageInternetExplorer = new CalculatorPage(baseTestInternetExplorer.webDriver);
         }
 
         /// <summary>
-        /// Test if 'from lang' and 'to lang' dropboxes are not empty.
-        /// In the first there should be available option 'Русский',
-        /// so that in the second one option 'Английский' is available.
+        /// A method to be performed after all tests in this class are completed regardless of the outcome.
+        /// Quits all the IWebDrivers.
         /// </summary>
-        /// <param name="driver">IWebDriver</param>
-        static void testWrittenTranslation(IWebDriver driver)
+        [OneTimeTearDown]
+        public void Dispose()
         {
-            driver.Navigate().GoToUrl(CalculatorPage.url);
-            calcPage = new CalculatorPage(driver);
-            IWebElement langDropBox = null;
-            IList<IWebElement> langOptions = null;
-            checkFromLangDropbox(ref langDropBox, ref langOptions);
-            checkFromLangOptions(langDropBox, langOptions);
+            baseTestChrome.Dispose();
+            baseTestFirefox.Dispose();
+            baseTestInternetExplorer.Dispose();
+        }
+
+        /// <summary>
+        /// Test 'From language' dropbox for emptiness
+        /// </summary>
+        [Test]
+        public static void testfromLangDropBox()
+        {
+            pageChrome.checkLangDropboxEmpty(DroboxType.From);
+            pageFirefox.checkLangDropboxEmpty(DroboxType.From);
+            pageInternetExplorer.checkLangDropboxEmpty(DroboxType.From);
+        }
+
+        /// <summary>
+        /// Test 'From language' dropbox to have 'Русский' as an option.
+        /// </summary>
+        [Test]
+        public static void testFromLangOptions()
+        {
+            pageChrome.checkLangOptions(DroboxType.From);
+            pageFirefox.checkLangOptions(DroboxType.From);
+            pageInternetExplorer.checkLangOptions(DroboxType.From);
+        }
+
+        /// <summary>
+        /// Test 'To language' dropbox for emptiness.
+        /// Actions to choose option 'Русский' in the 'From language' dropbox
+        /// are perfomed, since 'To language' is empty by default and requires 'From language' chosen.
+        /// </summary>
+        [Test]
+        public static void testToLangDropBox()
+        {
+            pageChrome.checkLangOptions(DroboxType.From);
             // Wait until previous action is correcty completed in browser.
             Thread.Sleep(500);
-            checkToLangDropbox(ref langDropBox, ref langOptions);
-            checkToLangOptions(langDropBox, langOptions);
-            AdditionalFunc.checkPhoneText(driver);
-            AdditionalFunc.checkLangSwitcherExistence(driver);
-            AdditionalFunc.checkLangSwitcherElements(driver);
+            pageChrome.checkLangDropboxEmpty(DroboxType.To);
+
+            pageFirefox.checkLangOptions(DroboxType.From);
+            // Wait until previous action is correcty completed in browser.
+            Thread.Sleep(500);
+            pageFirefox.checkLangDropboxEmpty(DroboxType.To);
+
+            pageInternetExplorer.checkLangOptions(DroboxType.From);
+            // Wait until previous action is correcty completed in browser.
+            Thread.Sleep(500);
+            pageInternetExplorer.checkLangDropboxEmpty(DroboxType.To);
         }
 
         /// <summary>
-        /// Check if 'from lang' dropbox is not empty.
+        /// Test 'To language' dropbox for 'Английский' as an option.
+        /// Actions to choose option 'Русский' in the 'From language' dropbox
+        /// are perfomed, since 'To language' is empty by default and requires 'From language' chosen.
         /// </summary>
-        /// <param name="lang">IWebElement of dropbox</param>
-        /// <param name="langOptions">Ilist of options of dropbox</param>
-        static void checkFromLangDropbox(ref IWebElement dropBox, ref IList<IWebElement> langOptions)
+        [Test]
+        public static void testToLangOptions()
         {
-            try
-            {
-                dropBox = calcPage.getFromLangElement();
-                dropBox.Click();
-                langOptions = calcPage.getFromLangOptions();
-                Assert.IsTrue(langOptions.Count >= 1);
-            }
-            catch (AssertionException)
-            {
-                AdditionalFunc.takeScreenShotCalcPage(driver);
-                driver.Quit();
-                throw new AssertionException("'from language' dropbox is empty");
-            }
-        }
+            pageChrome.checkLangOptions(DroboxType.From);
+            // Wait until previous action is correcty completed in browser.
+            Thread.Sleep(500);
+            pageChrome.checkLangOptions(DroboxType.To);
 
-        /// <summary>
-        /// Check if 'from lang' droppbox contains option 'Русский'.
-        /// </summary>
-        /// <param name="dropBox">IWebElement of dropbox</param>
-        /// <param name="langOptions">Ilist of options of dropbox</param>
-        static void checkFromLangOptions(IWebElement dropBox, IList<IWebElement> langOptions)
-        {
-            int optionsCount = langOptions.Count;
-            for (int dropBoxOption = 0; dropBoxOption < optionsCount; dropBoxOption++)
-            {
-                IWebElement option = langOptions[dropBoxOption];
-                if (option.GetAttribute("text").Equals("Русский"))
-                {
-                    if (((RemoteWebDriver)driver).Capabilities.BrowserName.Equals("firefox"))
-                    {
-                        // It is a known issue that selecting options in dropdown boxes does't quite work in geckodriver.
-                        // Neither .SelectByText(), nor .SelectByIndex() or simple .Click() seems to work correctly in FireFox.
-                        // Since other methods don't seem to work for geckodriver, keyboard is used in this case for choosing dropbox options.
-                        for (int j = 0; j < dropBoxOption; j++)
-                        {
-                            option.SendKeys(Keys.ArrowDown);
-                        }
-                        option.SendKeys(Keys.Enter);
-                    }
-                    else
-                    {
-                        SelectElement selectEl = new SelectElement(dropBox);
-                        selectEl.SelectByIndex(dropBoxOption);
-                    }
-                    return;
-                }
-            }
-            AdditionalFunc.takeScreenShotCalcPage(driver);
-            driver.Quit();
-            throw new AssertionException("'Русский' is not found in the 'from language' dropbox");
-        }
+            pageFirefox.checkLangOptions(DroboxType.From);
+            // Wait until previous action is correcty completed in browser.
+            Thread.Sleep(500);
+            pageFirefox.checkLangOptions(DroboxType.To);
 
-        /// <summary>
-        /// Check if 'to lang' dropbox is not empty.
-        /// </summary>
-        /// <param name="dropBox">IWebElement of dropbox</param>
-        /// <param name="langOptions">Ilist of options of dropbox</param>
-        static void checkToLangDropbox(ref IWebElement dropBox, ref IList<IWebElement> langOptions)
-        {
-            try
-            {
-                dropBox = calcPage.getToLangElement();
-                dropBox.Click();
-                langOptions = calcPage.getToLangOptions();
-                Assert.IsTrue(langOptions.Count >= 1);
-            }
-            catch (AssertionException)
-            {
-                AdditionalFunc.takeScreenShotCalcPage(driver);
-                driver.Quit();
-                throw new AssertionException("'to language' dropbox is empty");
-            }
-        }
-
-        /// <summary>
-        /// Check if 'to lang' droppbox contains option 'Английский'.
-        /// </summary>
-        /// <param name="dropBox">IWebElement of dropbox</param>
-        /// <param name="langOptions">Ilist of options of dropbox</param>
-        static void checkToLangOptions(IWebElement dropBox, IList<IWebElement> langOptions)
-        {
-            int optionsCount = langOptions.Count;
-            for (int i = 0; i < optionsCount; i++)
-            {
-                IWebElement option = langOptions[i];
-                if (option.GetAttribute("text").Equals("Английский"))
-                {
-                    SelectElement selectEl = new SelectElement(dropBox);
-                    selectEl.SelectByIndex(i);
-                    return;
-                }
-            }
-            AdditionalFunc.takeScreenShotCalcPage(driver);
-            driver.Quit();
-            throw new AssertionException("'Английский' is not found in the 'to language' dropbox");
+            pageInternetExplorer.checkLangOptions(DroboxType.From);
+            // Wait until previous action is correcty completed in browser.
+            Thread.Sleep(500);
+            pageInternetExplorer.checkLangOptions(DroboxType.To);
         }
     }
 }

@@ -12,17 +12,3 @@ E:\VS13\Projects\ABBYYTest\ABBYYTest\bin\Debug\WebDriver.Support.dll
 E:\VS13\Projects\ABBYYTest\ABBYYTest\bin\Debug\WebDriver.pdb
 E:\VS13\Projects\ABBYYTest\ABBYYTest\bin\Debug\WebDriver.Support.pdb
 E:\VS13\Projects\ABBYYTest\ABBYYTest\bin\Debug\WebDriver.Support.xml
-E:\Documents\Abbyy\ABBYYTestAssignment\ABBYYTest\ABBYYTest\bin\Debug\ABBYYTest.exe.config
-E:\Documents\Abbyy\ABBYYTestAssignment\ABBYYTest\ABBYYTest\obj\Debug\ABBYYTest.exe
-E:\Documents\Abbyy\ABBYYTestAssignment\ABBYYTest\ABBYYTest\obj\Debug\ABBYYTest.pdb
-E:\Documents\Abbyy\ABBYYTestAssignment\ABBYYTest\ABBYYTest\bin\Debug\ABBYYTest.exe
-E:\Documents\Abbyy\ABBYYTestAssignment\ABBYYTest\ABBYYTest\bin\Debug\ABBYYTest.pdb
-E:\Documents\Abbyy\ABBYYTestAssignment\ABBYYTest\ABBYYTest\bin\Debug\nunit.framework.dll
-E:\Documents\Abbyy\ABBYYTestAssignment\ABBYYTest\ABBYYTest\bin\Debug\WebDriver.dll
-E:\Documents\Abbyy\ABBYYTestAssignment\ABBYYTest\ABBYYTest\bin\Debug\WebDriver.Support.dll
-E:\Documents\Abbyy\ABBYYTestAssignment\ABBYYTest\ABBYYTest\bin\Debug\nunit.framework.xml
-E:\Documents\Abbyy\ABBYYTestAssignment\ABBYYTest\ABBYYTest\bin\Debug\WebDriver.pdb
-E:\Documents\Abbyy\ABBYYTestAssignment\ABBYYTest\ABBYYTest\bin\Debug\WebDriver.xml
-E:\Documents\Abbyy\ABBYYTestAssignment\ABBYYTest\ABBYYTest\bin\Debug\WebDriver.Support.pdb
-E:\Documents\Abbyy\ABBYYTestAssignment\ABBYYTest\ABBYYTest\bin\Debug\WebDriver.Support.xml
-E:\Documents\Abbyy\ABBYYTestAssignment\ABBYYTest\ABBYYTest\obj\Debug\ABBYYTest.csprojResolveAssemblyReference.cache

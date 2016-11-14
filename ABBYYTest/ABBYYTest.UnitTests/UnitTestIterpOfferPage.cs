@@ -18,101 +18,62 @@ namespace ABBYYTest.UnitTests
     [TestFixture]
     public class UnitTestIterpOfferPage
     {
-        private static InterpOfferPage interpPage;
-        private static IWebDriver driver;
+        // BaseTest variables for browsers.
+        private static BaseTest<ChromeDriver> baseTestChrome;
+        private static BaseTest<FirefoxDriver> baseTestFirefox;
+        private static BaseTest<InternetExplorerDriver> baseTestInternetExplorer;
+        // Web page variables.
+        private static InterpOfferPage pageChrome;
+        private static InterpOfferPage pageFirefox;
+        private static InterpOfferPage pageInternetExplorer;
+
         /// <summary>
-        /// Chrome test.
+        /// A one time setup method for tests in this class.
+        /// Initialise BaseTest and Web page variables.
         /// </summary>
-        [Test]
-        public void chromeInterpPageTest()
+        [OneTimeSetUp]
+        public void setUpMainPage()
         {
-            driver = new ChromeDriver();
-            driver.Manage().Window.Maximize();
-            testActivityBox(driver);
-            driver.Quit();
-        }
-        /// <summary>
-        /// Firefox test.
-        /// </summary>
-        [Test]
-        public void firefoxInterpPageTest()
-        {
-            driver = new FirefoxDriver();
-            driver.Manage().Window.Maximize();
-            testActivityBox(driver);
-            driver.Quit();
-        }
-        /// <summary>
-        /// Internet explorer test.
-        /// </summary>
-        [Test]
-        public void ieInterpPageTest()
-        {
-            driver = new InternetExplorerDriver();
-            driver.Manage().Window.Maximize();
-            testActivityBox(driver);
-            driver.Quit();
+            baseTestChrome = new BaseTest<ChromeDriver>(InterpOfferPage.url);
+            baseTestFirefox = new BaseTest<FirefoxDriver>(InterpOfferPage.url);
+            baseTestInternetExplorer = new BaseTest<InternetExplorerDriver>(InterpOfferPage.url);
+            pageChrome = new InterpOfferPage(baseTestChrome.webDriver);
+            pageFirefox = new InterpOfferPage(baseTestFirefox.webDriver);
+            pageInternetExplorer = new InterpOfferPage(baseTestInternetExplorer.webDriver);
         }
 
         /// <summary>
-        /// Test if 'activity type' dropbox is not empty and activities can be chosen.
+        /// A method to be performed after all tests in this class are completed regardless of the outcome.
+        /// Quits all the IWebDrivers.
         /// </summary>
-        /// <param name="driver">IWebDriver</param>
-        static void testActivityBox(IWebDriver driver)
+        [OneTimeTearDown]
+        public void Dispose()
         {
-            driver.Navigate().GoToUrl(InterpOfferPage.url);
-            interpPage = new InterpOfferPage(driver);
-            IWebElement activityBox = null;
-            IList<IWebElement> activityList = null;
-            checkActivityEnabled(ref activityBox, ref activityList);
-            checkActivityBox(activityBox, activityList);
-            AdditionalFunc.checkPhoneText(driver);
-            AdditionalFunc.checkLangSwitcherExistence(driver);
-            AdditionalFunc.checkLangSwitcherElements(driver);
+            baseTestChrome.Dispose();
+            baseTestFirefox.Dispose();
+            baseTestInternetExplorer.Dispose();
         }
 
         /// <summary>
-        /// Check if 'activity type' dropbox is not empty.
+        /// Test 'Activity type' dropbox for emptines.
         /// </summary>
-        /// <param name="activityBox">IWebElement of dropbox</param>
-        /// <param name="activityOptions">Ilist of options of dropbox</param>
-        static void checkActivityBox(IWebElement activityBox, IList<IWebElement> activityOptions)
+        [Test]
+        public static void testActivityBoxEmpty()
         {
-            try
-            {
-                activityBox = interpPage.getActivityBoxElement();
-                activityBox.Click();
-                activityOptions = interpPage.getActivityBoxOptions();
-                Assert.IsTrue(activityOptions.Count >= 1);
-            }
-            catch (AssertionException)
-            {
-                AdditionalFunc.takeScreenShotInterpPage(driver);
-                driver.Quit();
-                throw new AssertionException("'Activity type' dropbox is empty");
-            }
+            pageChrome.checkActivityBox(ActivityBoxCheck.IsEmpty);
+            pageFirefox.checkActivityBox(ActivityBoxCheck.IsEmpty);
+            pageInternetExplorer.checkActivityBox(ActivityBoxCheck.IsEmpty);
         }
 
         /// <summary>
-        /// Check if activity dropBox is enabled.
+        /// Test if 'Activity type' dropbox is enabled.
         /// </summary>
-        /// <param name="activityBox">IWebElement of dropbox</param>
-        /// <param name="activityOptions">Ilist of options of dropbox</param>
-        static void checkActivityEnabled(ref IWebElement activityBox, ref IList<IWebElement> activityOptions)
+        [Test]
+        public static void testActivityBoxEnabled()
         {
-            try
-            {
-                activityBox = interpPage.getActivityBoxElement();
-                activityBox.Click();
-                activityOptions = interpPage.getActivityBoxOptions();
-                Assert.IsTrue(activityBox.Enabled);
-            }
-            catch (AssertionException)
-            {
-                AdditionalFunc.takeScreenShotInterpPage(driver);
-                driver.Quit();
-                throw new AssertionException("'Activity type' dropbox is disabled. Not possible to choose activity.");
-            }
+            pageChrome.checkActivityBox(ActivityBoxCheck.IsEnabled);
+            pageFirefox.checkActivityBox(ActivityBoxCheck.IsEmpty);
+            pageInternetExplorer.checkActivityBox(ActivityBoxCheck.IsEmpty);
         }
     }
 }

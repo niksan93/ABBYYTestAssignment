@@ -18,108 +18,72 @@ namespace ABBYYTest.UnitTests
     [TestFixture]
     public class UnitTestMainPage
     {
-        private static MainPage mainPage;
-        private static IWebDriver driver;
+        // BaseTest variables for browsers.
+        private static BaseTest<ChromeDriver> baseTestChrome;
+        private static BaseTest<FirefoxDriver> baseTestFirefox;
+        private static BaseTest<InternetExplorerDriver> baseTestInternetExplorer;
+        // Web page variables.
+        private static MainPage pageChrome;
+        private static MainPage pageFirefox;
+        private static MainPage pageInternetExplorer;
+
         /// <summary>
-        /// Chrome test.
+        /// A one time setup method for tests in this class.
+        /// Initialise BaseTest and Web page variables.
         /// </summary>
-        [Test]
-        public void chromeMainPageTest()
+        [OneTimeSetUp]
+        public void setUpMainPage()
         {
-            driver = new ChromeDriver();
-            driver.Manage().Window.Maximize();
-            testImagesOnMain();
-            driver.Quit();
-        }
-        /// <summary>
-        /// Firefox test.
-        /// </summary>
-        [Test]
-        public void firefoxMainPageTest()
-        {
-            driver = new FirefoxDriver();
-            driver.Manage().Window.Maximize();
-            testImagesOnMain();
-            driver.Quit();
-        }
-        /// <summary>
-        /// Internet explorer test.
-        /// </summary>
-        [Test]
-        public void ieMainPageTest()
-        {
-            driver = new InternetExplorerDriver();
-            driver.Manage().Window.Maximize();
-            testImagesOnMain();
-            driver.Quit();
+           // try
+            //{
+                baseTestChrome = new BaseTest<ChromeDriver>(MainPage.url);
+                baseTestFirefox = new BaseTest<FirefoxDriver>(MainPage.url);
+                baseTestInternetExplorer = new BaseTest<InternetExplorerDriver>(MainPage.url);
+            //}
+            //catch (Exception e)
+           // {
+            //    Dispose();
+            //    throw new Exception("Error loading page");
+           // }
+            pageChrome = new MainPage(baseTestChrome.webDriver);
+            pageFirefox = new MainPage(baseTestFirefox.webDriver);
+            pageInternetExplorer = new MainPage(baseTestInternetExplorer.webDriver);
         }
 
         /// <summary>
-        /// Test if right images appear from right buttons.
+        /// A method to be performed after all tests in this class are completed regardless of the outcome.
+        /// Quits all the IWebDrivers.
         /// </summary>
-        /// <param name="driver">IWebDriver</param>
-        static void testImagesOnMain()
+        [OneTimeTearDown]
+        public void Dispose()
         {
-            driver.Navigate().GoToUrl(MainPage.url);
-            mainPage = new MainPage(driver);
-            AdditionalFunc.checkPhoneText(driver);
-            AdditionalFunc.checkLangSwitcherExistence(driver);
-            AdditionalFunc.checkLangSwitcherElements(driver);
-            int menuCount = mainPage.getMenuCount();
-            for (int i = 0; i < menuCount; i++)
-            {
-                checkImage(i, driver);
-            }
+            baseTestChrome.Dispose();
+            baseTestFirefox.Dispose();
+            baseTestInternetExplorer.Dispose();
         }
 
         /// <summary>
-        /// Check current image if it is displayed and ( if its position differes from the rest ).
+        /// Test that correct images appear on pressing certain buttons in the left menu.
         /// </summary>
-        /// <param name="number">Number of current image</param>
-        /// <param name="driver">IWebDriver</param>
-        static void checkImage(int number, IWebDriver driver)
+        [Test]
+        public static void testImageDisplayed()
         {
-            mainPage.getLeftMenu().ElementAt(number).Click();
-            Thread.Sleep(1000);
-            try
-            {
-                Assert.IsTrue(mainPage.getImagesInfo().ElementAt(number).Displayed);
-                if (mainPage.getBackGroundPosYForImages() != null)
-                {
-                    checkImagePosition(number);
-                }
-            }
-            catch (AssertionException)
-            {
-                AdditionalFunc.takeScreenshotMainPage(number, driver);
-                driver.Quit();
-                throw new AssertionException("Image number" + (number - 1) +  "was not correctly displayed");
-            }
+            pageChrome.checkImage();
+            pageFirefox.checkImage();
+            pageInternetExplorer.checkImage();
         }
 
+
         /// <summary>
-        /// Check if positions of current image and the rest are different.
+        /// Test that positions of current image and the rest on the base image are different.
+        /// I.e. Test that correct images appear on pressing certain buttons in the left menu.
         /// </summary>
-        /// <param name="number">Number of current image</param>
-        /// <param name="driver">IWebDriver</param>
-        static void checkImagePosition(int number)
+        [Test]
+        public static void testImagePosition()
         {
-            int elementsCount = mainPage.getBackGroundPosYForImages().Count;
-            int counter = 0;
-            try
-            {
-                for (counter = 0; counter < elementsCount && counter != number; counter++)
-                {
-                    List<int> backGrPositions = mainPage.getBackGroundPosYForImages();
-                    Assert.IsTrue(backGrPositions.ElementAt(number) != backGrPositions.ElementAt(counter));
-                }
-            }
-            catch (AssertionException)
-            {
-                AdditionalFunc.takeScreenshotMainPage(number, driver);
-                driver.Quit();
-                throw new AssertionException("Images positions at" + (number - 1) + " and " + (counter - 1) + " are equal.");
-            }
+            pageChrome.checkImagePosition();
+            pageFirefox.checkImagePosition();
+            pageInternetExplorer.checkImagePosition();
         }
     }
 }
