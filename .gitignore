@@ -1,5 +1,5 @@
-packages/
-ABBYYTest/bin
-ABBYYTest/obj
-ABBYYTest.UnitTests/bin
-ABBYYTest.UnitTests/obj
+ABBYYTest/packages/
+ABBYYTest/ABBYYTest/bin
+ABBYYTest/ABBYYTest/obj
+ABBYYTest/ABBYYTest.UnitTests/bin
+ABBYYTest/ABBYYTest.UnitTests/obj
