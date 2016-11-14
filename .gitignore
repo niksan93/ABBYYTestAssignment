@@ -1,5 +1,6 @@
-ABBYYTest/packages/
-ABBYYTest/ABBYYTest/bin
-ABBYYTest/ABBYYTest/obj
-ABBYYTest/ABBYYTest.UnitTests/bin
-ABBYYTest/ABBYYTest.UnitTests/obj
+$ cat .gitignore
+/ABBYYTest/packages/
+/ABBYYTest/ABBYYTest/bin
+/ABBYYTest/ABBYYTest/obj
+/ABBYYTest/ABBYYTest.UnitTests/bin
+/ABBYYTest/ABBYYTest.UnitTests/obj
