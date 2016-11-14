@@ -98,22 +98,9 @@ namespace ABBYYTest
                 IWebElement option = langOptions[dropBoxOption];
                 if (option.GetAttribute("text").Equals("Русский") && type == DroboxType.From)
                 {
-                    /*if (((RemoteWebDriver)driver).Capabilities.BrowserName.Equals("firefox"))
-                    {
-                        // It is a known issue that selecting options in dropdown boxes does't quite work in geckodriver.
-                        // Neither .SelectByText(), nor .SelectByIndex() or simple .Click() seems to work correctly in FireFox.
-                        // Since other methods don't seem to work for geckodriver, keyboard is used in this case for choosing dropbox options.
-                        for (int j = 0; j < dropBoxOption; j++)
-                        {
-                            option.SendKeys(Keys.ArrowDown);
-                        }
-                        option.SendKeys(Keys.Enter);
-                    }
-                    else
-                    {*/
-                        SelectElement selectEl = new SelectElement(dropBox);
-                        selectEl.SelectByIndex(dropBoxOption);
-                    //}
+                    // It is a known issue, that this might occasionally not work with Firefox
+                    SelectElement selectEl = new SelectElement(dropBox);
+                    selectEl.SelectByIndex(dropBoxOption);
                     return;
                 }
                 else

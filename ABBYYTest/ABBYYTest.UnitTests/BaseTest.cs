@@ -27,7 +27,6 @@ namespace ABBYYTest.UnitTests
             ABBYYTest.BasePage.checkPhoneText(this.webDriver);
             ABBYYTest.BasePage.checkLangSwitcherExistence(this.webDriver);
             ABBYYTest.BasePage.checkLangSwitcherElements(this.webDriver);            
-            //checkPhoneText(this.webDriver);
         }
 
         /// <summary>
@@ -37,12 +36,5 @@ namespace ABBYYTest.UnitTests
         {
             this.webDriver.Quit();
         }
-
-        
-        static void testContactInfo()
-        {
-
-        }
     }
-
 }
