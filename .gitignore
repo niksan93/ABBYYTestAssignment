@@ -4,5 +4,5 @@ $ cat .gitignore
 /ABBYYTest/ABBYYTest/obj
 /ABBYYTest/ABBYYTest.UnitTests/bin
 /ABBYYTest/ABBYYTest.UnitTests/obj
-*.suo
+*.*.suo
 /ABBYYTest/.nuget
