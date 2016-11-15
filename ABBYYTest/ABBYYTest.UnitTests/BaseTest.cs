@@ -18,7 +18,7 @@ namespace ABBYYTest.UnitTests
     public class BaseTest<TIWebDriver> where TIWebDriver : IWebDriver, new()
     {
         protected enum PageInfo { ContactInfo, LangSwitcherExistence, LangSwitcherElements }
-        IWebDriver webDriver;
+        static IWebDriver webDriver;
 
         public BaseTest()
         {
@@ -35,8 +35,18 @@ namespace ABBYYTest.UnitTests
            // BasePage.CheckLangSwitcherElements(webDriver);
         }
 
-        public static void init (){
-            IWebDriver
+        public static void Initialize(string url)
+        {
+            webDriver = new TIWebDriver();
+            webDriver.Manage().Window.Maximize();
+            webDriver.Navigate().GoToUrl(url);
+            Driver = webDriver;
+        }
+
+        public static IWebDriver Driver
+        {
+            get;
+            set;
         }
 
         /// <summary>
@@ -48,6 +58,10 @@ namespace ABBYYTest.UnitTests
             set;
         }
 
+        public static void Clean()
+        {
+            webDriver.Quit();
+        }
         /// <summary>
         /// Quit the current IWebDriver.
         /// </summary>

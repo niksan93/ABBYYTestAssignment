@@ -21,9 +21,9 @@ namespace ABBYYTest.UnitTests
         BaseTest<ChromeDriver> baseTestChrome;
         BaseTest<FirefoxDriver> baseTestFirefox;
         BaseTest<InternetExplorerDriver> baseTestInternetExplorer;
-        BaseTest<IWebDriver> baseTest;
+        //BaseTest<IWebDriver> baseTest;
         // Web page variables.
-        MainPage pageChrome;
+        MainPage Page;
         MainPage pageFirefox;
         MainPage pageInternetExplorer;
 
@@ -34,11 +34,11 @@ namespace ABBYYTest.UnitTests
         [OneTimeSetUp]
         public void SetUpMainPage()
         {
-            baseTest = new BaseTest<ChromeDriver>(MainPage.Url);
+            BaseTest<TIWebDriver>.Initialize(MainPage.Url);
             //baseTestChrome = new BaseTest<ChromeDriver>(MainPage.Url);
             //baseTestFirefox = new BaseTest<FirefoxDriver>(MainPage.Url);
             //baseTestInternetExplorer = new BaseTest<InternetExplorerDriver>(MainPage.Url);
-            pageChrome = new MainPage(baseTestChrome.WebDriver);
+            Page = new MainPage(BaseTest<TIWebDriver>.Driver);
             //pageFirefox = new MainPage(baseTestFirefox.WebDriver);
             //pageInternetExplorer = new MainPage(baseTestInternetExplorer.WebDriver);
         }
@@ -50,17 +50,18 @@ namespace ABBYYTest.UnitTests
         [OneTimeTearDown]
         public void DisposeAll()
         {
-            baseTestChrome.Dispose();
+            BaseTest<TIWebDriver>.Clean();
+            //baseTestChrome.Dispose();
             //baseTestFirefox.Dispose();
             //baseTestInternetExplorer.Dispose();
         }
 
         [Test]
-        public void TestContactInfoChrome()
+        public void TestContactInfo()
         {
             BaseTestInfo(() =>
             {
-                BasePage.CheckPhoneText(baseTestChrome.WebDriver);
+                BasePage.CheckPhoneText(BaseTest<TIWebDriver>.Driver);
             }, PageInfo.ContactInfo);
         }
 
@@ -69,7 +70,7 @@ namespace ABBYYTest.UnitTests
         {
             BaseTestInfo(() =>
             {
-                BasePage.CheckLangSwitcherExistence(baseTestChrome.WebDriver);
+                BasePage.CheckLangSwitcherExistence(BaseTest<TIWebDriver>.Driver);
             }, PageInfo.LangSwitcherExistence);
         }
 
@@ -78,7 +79,7 @@ namespace ABBYYTest.UnitTests
         {
             BaseTestInfo(() =>
             {
-                BasePage.CheckLangSwitcherElements(baseTestChrome.WebDriver);
+                BasePage.CheckLangSwitcherElements(BaseTest<TIWebDriver>.Driver);
             }, PageInfo.LangSwitcherElements);
         }
 
@@ -91,12 +92,12 @@ namespace ABBYYTest.UnitTests
         {
             try
             {
-                Assert.IsTrue(pageChrome.checkImage());
+                Assert.IsTrue(Page.checkImage());
             }
             catch (AssertionException)
             {
-                BasePage.TakeScreenshot(ScreenShotType.MainPage, baseTestChrome.WebDriver);
-                baseTestChrome.WebDriver.Quit();
+                BasePage.TakeScreenshot(ScreenShotType.MainPage, BaseTest<TIWebDriver>.Driver);
+                BaseTest<TIWebDriver>.Driver.Quit();
                 throw new AssertionException("Image was not correctly displayed");
             }
         }
