@@ -13,20 +13,12 @@ using OpenQA.Selenium.IE;
 using OpenQA.Selenium.Support.UI;
 using OpenQA.Selenium.Remote;
 
-
 namespace ABBYYTest.UnitTests
 {
-    [TestFixture]
-    public class UnitTestCalcPage
+    public class UnitTestCalcPage<TIWebDriver> : BaseTest<TIWebDriver> where TIWebDriver : IWebDriver, new()
     {
-        // BaseTest variables for browsers.
-        BaseTest<ChromeDriver> baseTestChrome;
-        BaseTest<FirefoxDriver> baseTestFirefox;
-        BaseTest<InternetExplorerDriver> baseTestInternetExplorer;
         // Web page variables.
-        CalculatorPage pageChrome;
-        CalculatorPage pageFirefox;
-        CalculatorPage pageInternetExplorer;
+        CalculatorPage Page;
 
         /// <summary>
         /// A one time setup method for tests in this class.
@@ -35,12 +27,8 @@ namespace ABBYYTest.UnitTests
         [OneTimeSetUp]
         public void SetUpMainPage()
         {
-            baseTestChrome = new BaseTest<ChromeDriver>(CalculatorPage.Url);
-            baseTestFirefox = new BaseTest<FirefoxDriver>(CalculatorPage.Url);
-            baseTestInternetExplorer = new BaseTest<InternetExplorerDriver>(CalculatorPage.Url);
-            pageChrome = new CalculatorPage(baseTestChrome.WebDriver);
-            pageFirefox = new CalculatorPage(baseTestFirefox.WebDriver);
-            pageInternetExplorer = new CalculatorPage(baseTestInternetExplorer.WebDriver);
+            BaseTest<TIWebDriver>.Initialize(CalculatorPage.Url);
+            Page = new CalculatorPage(BaseTest<TIWebDriver>.WebDriver);
         }
 
         /// <summary>
@@ -48,11 +36,9 @@ namespace ABBYYTest.UnitTests
         /// Quits all the IWebDrivers.
         /// </summary>
         [OneTimeTearDown]
-        public void Dispose()
+        public void DisposeAll()
         {
-            baseTestChrome.Dispose();
-            baseTestFirefox.Dispose();
-            baseTestInternetExplorer.Dispose();
+            BaseTest<TIWebDriver>.Dispose();
         }
 
         /// <summary>
@@ -61,9 +47,17 @@ namespace ABBYYTest.UnitTests
         [Test]
         public void TestfromLangDropBox()
         {
-            pageChrome.CheckLangDropboxEmpty(DropboxType.From);
-            pageFirefox.CheckLangDropboxEmpty(DropboxType.From);
-            pageInternetExplorer.CheckLangDropboxEmpty(DropboxType.From);
+            try
+            {
+                Assert.IsTrue(Page.CheckLangDropboxEmpty(DropboxType.From));
+            }
+            catch (AssertionException)
+            {
+                BasePage.TakeScreenshot(ScreenShotType.CalcPage, BaseTest<TIWebDriver>.WebDriver);
+                BaseTest<TIWebDriver>.WebDriver.Quit();
+                string exMsg = "From language' dropbox is empty";
+                throw new AssertionException(exMsg);
+            }
         }
 
         /// <summary>
@@ -72,9 +66,17 @@ namespace ABBYYTest.UnitTests
         [Test]
         public void TestFromLangOptions()
         {
-            pageChrome.CheckLangOptions(DropboxType.From);
-            pageFirefox.CheckLangOptions(DropboxType.From);
-            pageInternetExplorer.CheckLangOptions(DropboxType.From);
+            try
+            {
+                Assert.IsTrue(Page.CheckLangOptions(DropboxType.From));
+            }
+            catch (AssertionException)
+            {
+                BasePage.TakeScreenshot(ScreenShotType.CalcPage, BaseTest<TIWebDriver>.WebDriver);
+                BaseTest<TIWebDriver>.WebDriver.Quit();
+                string exMsg = "'Русский' is not found in the 'From language' dropbox";
+                throw new AssertionException(exMsg);
+            }
         }
 
         /// <summary>
@@ -85,20 +87,20 @@ namespace ABBYYTest.UnitTests
         [Test]
         public void TestToLangDropBox()
         {
-            pageChrome.CheckLangOptions(DropboxType.From);
-            // Wait until previous action is correcty completed in browser.
-            Thread.Sleep(500);
-            pageChrome.CheckLangDropboxEmpty(DropboxType.To);
-
-            pageFirefox.CheckLangOptions(DropboxType.From);
-            // Wait until previous action is correcty completed in browser.
-            Thread.Sleep(500);
-            pageFirefox.CheckLangDropboxEmpty(DropboxType.To);
-
-            pageInternetExplorer.CheckLangOptions(DropboxType.From);
-            // Wait until previous action is correcty completed in browser.
-            Thread.Sleep(500);
-            pageInternetExplorer.CheckLangDropboxEmpty(DropboxType.To);
+            try
+            {
+                Page.CheckLangOptions(DropboxType.From);
+                // Wait until previous action is correcty completed in browser.
+                Thread.Sleep(500);
+                Assert.IsTrue(Page.CheckLangDropboxEmpty(DropboxType.To));
+            }
+            catch (AssertionException)
+            {
+                BasePage.TakeScreenshot(ScreenShotType.CalcPage, BaseTest<TIWebDriver>.WebDriver);
+                BaseTest<TIWebDriver>.WebDriver.Quit();
+                string exMsg = "To language' dropbox is empty";
+                throw new AssertionException(exMsg);
+            }
         }
 
         /// <summary>
@@ -109,20 +111,56 @@ namespace ABBYYTest.UnitTests
         [Test]
         public void TestToLangOptions()
         {
-            pageChrome.CheckLangOptions(DropboxType.From);
-            // Wait until previous action is correcty completed in browser.
-            Thread.Sleep(500);
-            pageChrome.CheckLangOptions(DropboxType.To);
+            try
+            {
+                Page.CheckLangOptions(DropboxType.From);
+                // Wait until previous action is correcty completed in browser.
+                Thread.Sleep(500);
+                Assert.IsTrue(Page.CheckLangOptions(DropboxType.To));
+            }
+            catch (AssertionException)
+            {
+                BasePage.TakeScreenshot(ScreenShotType.CalcPage, BaseTest<TIWebDriver>.WebDriver);
+                BaseTest<TIWebDriver>.WebDriver.Quit();
+                string exMsg = "'Английский' is not found in the 'To language' dropbox";
+                throw new AssertionException(exMsg);
+            }
+        }
 
-            pageFirefox.CheckLangOptions(DropboxType.From);
-            // Wait until previous action is correcty completed in browser.
-            Thread.Sleep(500);
-            pageFirefox.CheckLangOptions(DropboxType.To);
+        /// <summary>
+        /// Child method for testing contact info presence on page.
+        /// </summary>
+        [Test]
+        public void TestContactInfoCalcPage()
+        {
+            BaseTestInfo(() =>
+            {
+                BasePage.CheckPhoneText(BaseTest<TIWebDriver>.WebDriver);
+            }, PageInfo.ContactInfo);
+        }
 
-            pageInternetExplorer.CheckLangOptions(DropboxType.From);
-            // Wait until previous action is correcty completed in browser.
-            Thread.Sleep(500);
-            pageInternetExplorer.CheckLangOptions(DropboxType.To);
+        /// <summary>
+        /// Chold method for testing language switcher existence on page.
+        /// </summary>
+        [Test]
+        public void TestLangSwitcherExistenceCalcPage()
+        {
+            BaseTestInfo(() =>
+            {
+                BasePage.CheckLangSwitcherExistence(BaseTest<TIWebDriver>.WebDriver);
+            }, PageInfo.LangSwitcherExistence);
+        }
+
+        /// <summary>
+        /// Child method for testing language switcher for right elements.
+        /// </summary>
+        [Test]
+        public void TestLangSwitcherElementsCalcPage()
+        {
+            BaseTestInfo(() =>
+            {
+                BasePage.CheckLangSwitcherElements(BaseTest<TIWebDriver>.WebDriver);
+            }, PageInfo.LangSwitcherElements);
         }
     }
 }

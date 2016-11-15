@@ -20,56 +20,40 @@ namespace ABBYYTest.UnitTests
         protected enum PageInfo { ContactInfo, LangSwitcherExistence, LangSwitcherElements }
         static IWebDriver webDriver;
 
-        public BaseTest()
-        {
-
-        }
-        public BaseTest(string url)
-        {
-            webDriver = new TIWebDriver();
-            webDriver.Manage().Window.Maximize();
-            webDriver.Navigate().GoToUrl(url);
-            WebDriver = webDriver;
-           // BasePage.CheckPhoneText(webDriver);
-           // BasePage.CheckLangSwitcherExistence(webDriver);
-           // BasePage.CheckLangSwitcherElements(webDriver);
-        }
-
+        /// <summary>
+        /// Init method.
+        /// </summary>
+        /// <param name="url"></param>
         public static void Initialize(string url)
         {
             webDriver = new TIWebDriver();
             webDriver.Manage().Window.Maximize();
             webDriver.Navigate().GoToUrl(url);
-            Driver = webDriver;
-        }
-
-        public static IWebDriver Driver
-        {
-            get;
-            set;
+            WebDriver = webDriver;
         }
 
         /// <summary>
-        /// IWebDriver property
+        /// IWebDriver property.
         /// </summary>
-        public IWebDriver WebDriver
+        public static IWebDriver WebDriver
         {
             get;
             set;
         }
 
-        public static void Clean()
-        {
-            webDriver.Quit();
-        }
         /// <summary>
         /// Quit the current IWebDriver.
         /// </summary>
-        public void Dispose()
+        public static void Dispose()
         {
             webDriver.Quit();
         }
 
+        /// <summary>
+        /// Base method for testing and reacting to contact information and language switch on page.
+        /// </summary>
+        /// <param name="action">Delegate method.</param>
+        /// <param name="info">PageInfo to react with respective message in Exception.</param>
         protected void BaseTestInfo(Action action, PageInfo info)
         {
             try
@@ -94,49 +78,5 @@ namespace ABBYYTest.UnitTests
                 throw new AssertionException(message);
             }
         }
-        
-        /*protected void BaseTestContactInfo(Action action)//, IWebDriver driver)
-        {
-            try
-            {
-                action();
-            }
-            catch (AssertionException)
-            {
-                BasePage.TakeScreenshot(ScreenShotType.ContactInfo, webDriver);
-                webDriver.Quit();
-                throw new AssertionException("Phone number is not correct on page" + webDriver.Url);
-            }
-        }
-
-        protected void BaseTestLangSwitcherExistence(Action action)
-        {
-            try
-            {
-                action();
-            }
-            catch (AssertionException)
-            {
-                BasePage.TakeScreenshot(ScreenShotType.LanguageChange, webDriver);
-                webDriver.Quit();
-                throw new AssertionException("There is no language switcher element on page" + webDriver.Url);
-            }
-        }
-
-        protected void BaseTestLangSwitcherElements(Action action)
-        {
-            try
-            {
-                action();
-            }
-            catch (AssertionException)
-            {
-                //driver.FindElement(langSwitcherLocator).Click();
-                BasePage.TakeScreenshot(ScreenShotType.LanguageChange, webDriver);
-                webDriver.Quit();
-                throw new Exception("Unexpected languages in language drop box");
-            }
-        }*/
-
     }
 }

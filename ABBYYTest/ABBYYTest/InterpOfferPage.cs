@@ -24,6 +24,9 @@ namespace ABBYYTest
             driver = wdriver;
         }
 
+        /// <summary>
+        /// Static constructor to initialize static property.
+        /// </summary>
         static InterpOfferPage()
         {
             Url = url;
@@ -59,26 +62,15 @@ namespace ABBYYTest
         /// </summary>
         /// <param name="type">ActivityBoxCheck.IsEmpty = check for emptiness
         /// ActivityBoxCheck.IsEnabled = check if dropbox is enabled</param>
-        public void CheckActivityBox(ActivityBoxCheck type)
+        public bool CheckActivityBox(ActivityBoxCheck type)
         {
-            try
-            {
-                IWebElement activityBox = GetActivityBoxElement();
-                activityBox.Click();
-                IList<IWebElement> activityOptions = GetActivityBoxOptions();
-                if (type == ActivityBoxCheck.IsEmpty)
-                    Assert.IsTrue(activityOptions.Count >= 1);
-                else
-                    Assert.IsTrue(activityBox.Enabled);
-            }
-            catch (AssertionException)
-            {
-                BasePage.TakeScreenshot(ScreenShotType.InterpOfferPage, driver);
-                driver.Quit();
-                string exDropbox = type == ActivityBoxCheck.IsEmpty ? "empty." : "disabled. Not possible to choose activity.";
-                string exMsg = string.Format("'Activity type' dropbox is {0}", exDropbox);
-                throw new AssertionException(exMsg);
-            }
+            IWebElement activityBox = GetActivityBoxElement();
+            activityBox.Click();
+            IList<IWebElement> activityOptions = GetActivityBoxOptions();
+            if (type == ActivityBoxCheck.IsEmpty)
+                return activityOptions.Count >= 1;
+            else
+                return activityBox.Enabled;
         }
     }
 }

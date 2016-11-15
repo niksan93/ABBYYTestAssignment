@@ -20,7 +20,7 @@ namespace ABBYYTest
         IWebDriver driver;
         // Page url.
         readonly static string url = "http://abbyy-ls.ru/";
-
+        // By Locators.
         readonly By menuLocator = By.ClassName("control-slider");
         readonly By imagesInfoLocator = By.ClassName("frontslider2-rightcol-img");
 
@@ -29,6 +29,9 @@ namespace ABBYYTest
             driver = wdriver;
         }
 
+        /// <summary>
+        /// Static constructor to initialize static property.
+        /// </summary>
         static MainPage()
         {
             Url = url;

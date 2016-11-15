@@ -15,17 +15,10 @@ using OpenQA.Selenium.Remote;
 
 namespace ABBYYTest.UnitTests
 {
-    [TestFixture]
-    public class UnitTestIterpOfferPage
+    public class UnitTestIterpOfferPage<TIWebDriver> : BaseTest<TIWebDriver> where TIWebDriver : IWebDriver, new()
     {
-        // BaseTest variables for browsers.
-        BaseTest<ChromeDriver> baseTestChrome;
-        BaseTest<FirefoxDriver> baseTestFirefox;
-        BaseTest<InternetExplorerDriver> baseTestInternetExplorer;
         // Web page variables.
-        InterpOfferPage pageChrome;
-        InterpOfferPage pageFirefox;
-        InterpOfferPage pageInternetExplorer;
+        InterpOfferPage Page;
 
         /// <summary>
         /// A one time setup method for tests in this class.
@@ -34,12 +27,8 @@ namespace ABBYYTest.UnitTests
         [OneTimeSetUp]
         public void SetUpMainPage()
         {
-            baseTestChrome = new BaseTest<ChromeDriver>(InterpOfferPage.Url);
-            baseTestFirefox = new BaseTest<FirefoxDriver>(InterpOfferPage.Url);
-            baseTestInternetExplorer = new BaseTest<InternetExplorerDriver>(InterpOfferPage.Url);
-            pageChrome = new InterpOfferPage(baseTestChrome.WebDriver);
-            pageFirefox = new InterpOfferPage(baseTestFirefox.WebDriver);
-            pageInternetExplorer = new InterpOfferPage(baseTestInternetExplorer.WebDriver);
+            BaseTest<TIWebDriver>.Initialize(InterpOfferPage.Url);
+            Page = new InterpOfferPage(BaseTest<TIWebDriver>.WebDriver);
         }
 
         /// <summary>
@@ -47,11 +36,9 @@ namespace ABBYYTest.UnitTests
         /// Quits all the IWebDrivers.
         /// </summary>
         [OneTimeTearDown]
-        public void Dispose()
+        public void DisposeAll()
         {
-            baseTestChrome.Dispose();
-            baseTestFirefox.Dispose();
-            baseTestInternetExplorer.Dispose();
+            BaseTest<TIWebDriver>.Dispose();
         }
 
         /// <summary>
@@ -60,9 +47,17 @@ namespace ABBYYTest.UnitTests
         [Test]
         public void TestActivityBoxEmpty()
         {
-            pageChrome.CheckActivityBox(ActivityBoxCheck.IsEmpty);
-            pageFirefox.CheckActivityBox(ActivityBoxCheck.IsEmpty);
-            pageInternetExplorer.CheckActivityBox(ActivityBoxCheck.IsEmpty);
+            try
+            {
+                Assert.IsTrue(Page.CheckActivityBox(ActivityBoxCheck.IsEmpty));
+            }
+            catch (AssertionException)
+            {
+                BasePage.TakeScreenshot(ScreenShotType.InterpOfferPage, BaseTest<TIWebDriver>.WebDriver);
+                BaseTest<TIWebDriver>.WebDriver.Quit();
+                string exMsg = "'Activity type' dropbox is empty.";
+                throw new AssertionException(exMsg);
+            }
         }
 
         /// <summary>
@@ -71,9 +66,53 @@ namespace ABBYYTest.UnitTests
         [Test]
         public void TestActivityBoxEnabled()
         {
-            pageChrome.CheckActivityBox(ActivityBoxCheck.IsEnabled);
-            pageFirefox.CheckActivityBox(ActivityBoxCheck.IsEnabled);
-            pageInternetExplorer.CheckActivityBox(ActivityBoxCheck.IsEnabled);
+            try
+            {
+                Assert.IsTrue(Page.CheckActivityBox(ActivityBoxCheck.IsEnabled));
+            }
+            catch (AssertionException)
+            {
+                BasePage.TakeScreenshot(ScreenShotType.InterpOfferPage, BaseTest<TIWebDriver>.WebDriver);
+                BaseTest<TIWebDriver>.WebDriver.Quit();
+                string exMsg = "'Activity type' dropbox is disabled. Not possible to choose activity..";
+                throw new AssertionException(exMsg);
+            }
+        }
+
+        /// <summary>
+        /// Child method for testing contact info presence on page.
+        /// </summary>
+        [Test]
+        public void TestContactInfoInterpPage()
+        {
+            BaseTestInfo(() =>
+            {
+                BasePage.CheckPhoneText(BaseTest<TIWebDriver>.WebDriver);
+            }, PageInfo.ContactInfo);
+        }
+
+        /// <summary>
+        /// Chold method for testing language switcher existence on page.
+        /// </summary>
+        [Test]
+        public void TestLangSwitcherExistenceInterpPage()
+        {
+            BaseTestInfo(() =>
+            {
+                BasePage.CheckLangSwitcherExistence(BaseTest<TIWebDriver>.WebDriver);
+            }, PageInfo.LangSwitcherExistence);
+        }
+
+        /// <summary>
+        /// Child method for testing language switcher for right elements.
+        /// </summary>
+        [Test]
+        public void TestLangSwitcherElementsInterpPage()
+        {
+            BaseTestInfo(() =>
+            {
+                BasePage.CheckLangSwitcherElements(BaseTest<TIWebDriver>.WebDriver);
+            }, PageInfo.LangSwitcherElements);
         }
     }
 }

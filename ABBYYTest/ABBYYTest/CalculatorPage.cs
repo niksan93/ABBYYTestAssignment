@@ -27,6 +27,9 @@ namespace ABBYYTest
             driver = wdriver;
         }
 
+        /// <summary>
+        /// Static constructor to initialize static property.
+        /// </summary>
         static CalculatorPage()
         {
             Url = url;
@@ -71,22 +74,11 @@ namespace ABBYYTest
         /// <param name="langOptions">Ilist of options of dropbox</param>
         /// <param name="from">true: 'from language'
         /// false: 'to language'</param>
-        public void CheckLangDropboxEmpty(DropboxType type)
+        public bool CheckLangDropboxEmpty(DropboxType type)
         {
-            try
-            {
-                IWebElement dropBox = GetLangElement(type);
-                IList<IWebElement> langOptions = GetLangOptions(type);
-                Assert.IsTrue(langOptions.Count >= 1);
-            }
-            catch (AssertionException)
-            {
-                BasePage.TakeScreenshot(ScreenShotType.CalcPage, driver);
-                driver.Quit();
-                string exDropbox = type == DropboxType.From ? "From" : "To";
-                string exMsg = string.Format("{0} language' dropbox is empty", exDropbox);
-                throw new AssertionException(exMsg);
-            }
+            IWebElement dropBox = GetLangElement(type);
+            IList<IWebElement> langOptions = GetLangOptions(type);
+            return langOptions.Count >= 1;
         }
 
         /// <summary>
@@ -96,7 +88,7 @@ namespace ABBYYTest
         /// <param name="langOptions">Ilist of options of dropbox</param>
         /// <param name="from">true: 'from language'
         /// false: 'to language'</param>
-        public void CheckLangOptions(DropboxType type)
+        public bool CheckLangOptions(DropboxType type)
         {
             IWebElement dropBox = GetLangElement(type);
             IList<IWebElement> langOptions = GetLangOptions(type);
@@ -111,15 +103,10 @@ namespace ABBYYTest
                     // It is a known issue, that this might occasionally not work with Firefox
                     SelectElement selectEl = new SelectElement(dropBox);
                     selectEl.SelectByIndex(dropBoxOption);
-                    return;
+                    return true;
                 }
             }
-            BasePage.TakeScreenshot(ScreenShotType.CalcPage, driver);
-            driver.Quit();
-            string exLang = type == DropboxType.From ? "'Русский'" : "'Английский'";
-            string exDropbox = type == DropboxType.From ? "from" : "to";
-            string exMsg = string.Format("{0} is not found in the '{1} language' dropbox", exLang, exDropbox);
-            throw new AssertionException(exMsg);
+            return false;
         }
     }
 }
