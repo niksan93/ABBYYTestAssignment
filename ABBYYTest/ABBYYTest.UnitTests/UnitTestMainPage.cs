@@ -85,12 +85,11 @@ namespace ABBYYTest.UnitTests
         {
             try
             {
-                Assert.IsTrue(Page.checkImage());
+                Assert.IsTrue(Page.checkImage(BaseTest<TIWebDriver>.WebDriver));
             }
             catch (AssertionException)
             {
                 BasePage.TakeScreenshot(ScreenShotType.MainPage, BaseTest<TIWebDriver>.WebDriver);
-                BaseTest<TIWebDriver>.WebDriver.Quit();
                 throw new AssertionException("Image was not correctly displayed");
             }
         }
@@ -109,7 +108,6 @@ namespace ABBYYTest.UnitTests
             catch (AssertionException)
             {
                 BasePage.TakeScreenshot(ScreenShotType.MainPage, BaseTest<TIWebDriver>.WebDriver);
-                BaseTest<TIWebDriver>.WebDriver.Quit();
                 throw new AssertionException("Image was not correctly displayed.");
             }
         }

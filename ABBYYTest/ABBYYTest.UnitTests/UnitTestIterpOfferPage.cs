@@ -54,7 +54,6 @@ namespace ABBYYTest.UnitTests
             catch (AssertionException)
             {
                 BasePage.TakeScreenshot(ScreenShotType.InterpOfferPage, BaseTest<TIWebDriver>.WebDriver);
-                BaseTest<TIWebDriver>.WebDriver.Quit();
                 string exMsg = "'Activity type' dropbox is empty.";
                 throw new AssertionException(exMsg);
             }
@@ -73,7 +72,6 @@ namespace ABBYYTest.UnitTests
             catch (AssertionException)
             {
                 BasePage.TakeScreenshot(ScreenShotType.InterpOfferPage, BaseTest<TIWebDriver>.WebDriver);
-                BaseTest<TIWebDriver>.WebDriver.Quit();
                 string exMsg = "'Activity type' dropbox is disabled. Not possible to choose activity..";
                 throw new AssertionException(exMsg);
             }

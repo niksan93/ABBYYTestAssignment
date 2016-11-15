@@ -66,7 +66,6 @@ namespace ABBYYTest.UnitTests
                     BasePage.TakeScreenshot(ScreenShotType.ContactInfo, webDriver);
                 else
                     BasePage.TakeScreenshot(ScreenShotType.LanguageChange, webDriver);
-                webDriver.Quit();
                 string messageStart = "";
                 if (info == PageInfo.ContactInfo)
                     messageStart = "Phone number is not correct on page ";

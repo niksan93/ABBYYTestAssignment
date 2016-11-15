@@ -54,7 +54,6 @@ namespace ABBYYTest.UnitTests
             catch (AssertionException)
             {
                 BasePage.TakeScreenshot(ScreenShotType.CalcPage, BaseTest<TIWebDriver>.WebDriver);
-                BaseTest<TIWebDriver>.WebDriver.Quit();
                 string exMsg = "From language' dropbox is empty";
                 throw new AssertionException(exMsg);
             }
@@ -73,7 +72,6 @@ namespace ABBYYTest.UnitTests
             catch (AssertionException)
             {
                 BasePage.TakeScreenshot(ScreenShotType.CalcPage, BaseTest<TIWebDriver>.WebDriver);
-                BaseTest<TIWebDriver>.WebDriver.Quit();
                 string exMsg = "'Русский' is not found in the 'From language' dropbox";
                 throw new AssertionException(exMsg);
             }
@@ -91,13 +89,12 @@ namespace ABBYYTest.UnitTests
             {
                 Page.CheckLangOptions(DropboxType.From);
                 // Wait until previous action is correcty completed in browser.
-                Thread.Sleep(500);
+                BaseTest<TIWebDriver>.WebDriver.Manage().Timeouts().ImplicitlyWait(TimeSpan.FromSeconds(1));
                 Assert.IsTrue(Page.CheckLangDropboxEmpty(DropboxType.To));
             }
             catch (AssertionException)
             {
                 BasePage.TakeScreenshot(ScreenShotType.CalcPage, BaseTest<TIWebDriver>.WebDriver);
-                BaseTest<TIWebDriver>.WebDriver.Quit();
                 string exMsg = "To language' dropbox is empty";
                 throw new AssertionException(exMsg);
             }
@@ -115,13 +112,12 @@ namespace ABBYYTest.UnitTests
             {
                 Page.CheckLangOptions(DropboxType.From);
                 // Wait until previous action is correcty completed in browser.
-                Thread.Sleep(500);
+                BaseTest<TIWebDriver>.WebDriver.Manage().Timeouts().ImplicitlyWait(TimeSpan.FromSeconds(1));
                 Assert.IsTrue(Page.CheckLangOptions(DropboxType.To));
             }
             catch (AssertionException)
             {
                 BasePage.TakeScreenshot(ScreenShotType.CalcPage, BaseTest<TIWebDriver>.WebDriver);
-                BaseTest<TIWebDriver>.WebDriver.Quit();
                 string exMsg = "'Английский' is not found in the 'To language' dropbox";
                 throw new AssertionException(exMsg);
             }

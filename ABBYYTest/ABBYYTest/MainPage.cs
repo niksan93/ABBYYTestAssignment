@@ -100,7 +100,7 @@ namespace ABBYYTest
         /// Check current image if it is displayed and ( if its position differes from the rest ).
         /// </summary>
         /// <param name="driver">IWebDriver</param>
-        public bool checkImage()
+        public bool checkImage(IWebDriver driver)
         {
             int menuCount = GetMenuCount();
             for (int number = 0; number < menuCount; number++)
